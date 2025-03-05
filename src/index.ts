@@ -16,6 +16,8 @@ type SettingsDataType = {
   status: Status
   custom_status: {
     text: string
+    emoji_id: string,
+    emoji_name: string
   }
 }
 
@@ -24,8 +26,8 @@ type Status = "online" | "idle" | "dnd"
 async function updateUserSettings(token: string, settingsData: SettingsDataType, url: string) {
   try {
     const response = await axios.patch(
-      url, 
-      settingsData, 
+      url,
+      settingsData,
       {
         headers: {
           'Authorization': token,
@@ -34,7 +36,7 @@ async function updateUserSettings(token: string, settingsData: SettingsDataType,
       }
     );
     
-    // console.log('Update successful:', response.data);
+    // console.log('Update successful:', response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -48,12 +50,16 @@ async function updateUserSettings(token: string, settingsData: SettingsDataType,
 
 let index = 0
 const profileStatus: Status[] = ["online", "idle", "dnd"]
+const emojiId = ["1346878004189462538", "1346878070644150312", "1346877945263816815"]
+const emojiNameArr = ["strongest", "weak", "high"]
 
 const intervalId = setInterval(async () => {
   try {
     const line = messageData.split('\n');
     const sentence = line[index];
     const profile = profileStatus[index];
+    const emoji = emojiId[index]
+    const emojiName = emojiNameArr[index]
     
     // Cycle index
     index = (index + 1) % line.length;
@@ -61,7 +67,9 @@ const intervalId = setInterval(async () => {
     const jsonData = {
       "status": profile,
       "custom_status": {
-        "text": sentence
+        "text": sentence,
+        "emoji_id": emoji,
+        "emoji_name": emojiName
       }
     };
 
@@ -73,3 +81,4 @@ const intervalId = setInterval(async () => {
     clearInterval(intervalId);
   }
 }, 5000);
+
