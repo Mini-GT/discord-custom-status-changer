@@ -9,9 +9,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const textPath = path.join(__dirname, '../rockerPaperScissors.txt');
 let messageData = await fs.readFile(textPath, 'utf8');
 
-const url = "https://discord.com/api/v9/users/@me/settings"
+const url = process.env.URL
 const token = process.env.MINI_AUTH
 if(!token) throw new Error('No token provided')
+if(!url) throw new Error('No URL provided')
 
 type SettingsDataType = {
   // status: Status
